@@ -1,0 +1,18 @@
+build:
+  image: debian:sid
+  stage: build
+  before_script:
+    - apt-get update
+    - apt-get install -y cmake ninja-build openjdk-8-jdk wget unzip
+    - wget --quiet --output-document=android-sdk.zip https://dl.google.com/android/repository/sdk-tools-linux-3859397.zip
+    - mkdir $PWD/android-sdk-linux
+    - unzip -qq android-sdk.zip -d $PWD/android-sdk-linux
+    - export ANDROID_HOME=$PWD/android-sdk-linux
+    - echo y | $ANDROID_HOME/tools/bin/sdkmanager --update
+    - (echo y; echo y; echo y; echo y; echo y; echo y) | $ANDROID_HOME/tools/bin/sdkmanager --licenses
+  script:
+    - chmod +x gradlew
+    - ./gradlew buildDebug
+  artifacts:
+    paths:
+      - app/build/outputs/apk/*/*.apk
