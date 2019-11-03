@@ -12,7 +12,7 @@ build:
     - (echo y; echo y; echo y; echo y; echo y; echo y) | $ANDROID_HOME/tools/bin/sdkmanager --licenses
   script:
     - chmod +x gradlew
-    - ./gradlew buildDebug
+    - ./gradlew assembleDebug
   artifacts:
     paths:
       - app/build/outputs/apk/*/*.apk
