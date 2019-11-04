@@ -5,7 +5,7 @@
 #include <math.h>
 
 extern "C" JNIEXPORT jstring JNICALL
-Java_com_altillimity_satpredict_MainActivity_testJNI(
+Java_com_altillimity_satpredict_MainActivity_getCurrentSatPos(
     JNIEnv *env,
     jobject /* this */,
     jstring tle1_j,
@@ -40,10 +40,10 @@ Java_com_altillimity_satpredict_MainActivity_testJNI(
     struct predict_observation observer;
     predict_observe_orbit(obs, &sat_orbit, &observer);
 
-    hello = std::to_string(observer.elevation * 180.0 / M_PI);
+    hello = std::to_string((sat_orbit.latitude * 180.0 / M_PI) >= 180 ? (sat_orbit.latitude * 180.0 / M_PI) - 360 : (sat_orbit.latitude * 180.0 / M_PI)) + ":" + std::to_string((sat_orbit.longitude * 180.0 / M_PI) >= 180 ? (sat_orbit.longitude * 180.0 / M_PI) - 360 : (sat_orbit.longitude * 180.0 / M_PI)) + ":" + std::to_string(observer.elevation * 180.0 / M_PI);
 
     predict_destroy_orbital_elements(sat);
-    predict_destroy_observer(obs);
+    //predict_destroy_observer(obs);
 
     return env->NewStringUTF(hello.c_str());
 }
