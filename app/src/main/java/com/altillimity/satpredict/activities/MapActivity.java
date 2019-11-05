@@ -16,6 +16,11 @@ import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.ItemizedIconOverlay;
+import org.osmdroid.views.overlay.ItemizedOverlayWithFocus;
+import org.osmdroid.views.overlay.OverlayItem;
+
+import java.util.ArrayList;
 
 public class MapActivity extends AppCompatActivity {
 
@@ -49,6 +54,26 @@ public class MapActivity extends AppCompatActivity {
         mapController.setZoom(3);
         GeoPoint startPoint = new GeoPoint(latitude, longitude);
         mapController.setCenter(startPoint);
+
+        ArrayList<OverlayItem> items = new ArrayList<OverlayItem>();
+        items.add(new OverlayItem("Title", "Description", startPoint)); // Lat/Lon decimal degrees
+
+//the overlay
+        ItemizedOverlayWithFocus<OverlayItem> mOverlay = new ItemizedOverlayWithFocus<OverlayItem>(items,
+                new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
+                    @Override
+                    public boolean onItemSingleTapUp(final int index, final OverlayItem item) {
+                        //do something
+                        return true;
+                    }
+                    @Override
+                    public boolean onItemLongPress(final int index, final OverlayItem item) {
+                        return false;
+                    }
+                }, ctx);
+        mOverlay.setFocusItemsOnTap(true);
+
+        mapView.getOverlays().add(mOverlay);
     }
 
     public void onResume() {
