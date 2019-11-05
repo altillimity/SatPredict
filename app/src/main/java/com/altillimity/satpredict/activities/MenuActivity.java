@@ -67,6 +67,15 @@ public class MenuActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         this.setTitle("Satellites");
+
+        Button btn =  (Button) findViewById(R.id.buttonAddSat);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(thisAct, AddSatActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     public class SatAdapter extends
@@ -121,7 +130,6 @@ public class MenuActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(thisAct, MapActivity.class);
-
                     intent.putExtra("latitude", satellite.getLatitude());
                     intent.putExtra("longitude", satellite.getLontitude());
                     startActivity(intent);

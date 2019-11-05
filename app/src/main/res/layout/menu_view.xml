@@ -7,5 +7,11 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/menuRecycler"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/buttonAddSat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="ADD SATELLITE" />
 </LinearLayout>
