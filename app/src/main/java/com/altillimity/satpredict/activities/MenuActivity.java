@@ -23,6 +23,8 @@ import org.osmdroid.config.Configuration;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MenuActivity extends AppCompatActivity {
 
@@ -35,6 +37,8 @@ public class MenuActivity extends AppCompatActivity {
     Activity thisAct = this;
 
     ArrayList<Satellite> satellites;
+
+    Timer timer = new Timer();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -106,7 +110,7 @@ public class MenuActivity extends AppCompatActivity {
             final Satellite satellite = mSatellite.get(position);
 
             TextView textView = viewHolder.nameTextView;
-            TextView info = viewHolder.infoTextView;
+            final TextView info = viewHolder.infoTextView;
 
             textView.setText(satellite.getName());
             satellite.updateData();
@@ -124,6 +128,13 @@ public class MenuActivity extends AppCompatActivity {
                 }
             });
 
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    satellite.updateData();
+                    info.setText("Latitude : "+satellite.getLatitude().toString()+"°\nLongitude : "+satellite.getLontitude().toString()+"°\nElevation : "+satellite.getElevation().toString()+"°");
+                }
+            }, 0, 1000);
 
         }
 

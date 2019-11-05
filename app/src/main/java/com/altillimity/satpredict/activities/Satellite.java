@@ -1,7 +1,5 @@
 package com.altillimity.satpredict.activities;
 
-import java.util.ArrayList;
-
 public class Satellite {
     private String satName;
     private String satTle1;
