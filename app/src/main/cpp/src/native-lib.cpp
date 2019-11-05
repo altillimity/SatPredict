@@ -5,7 +5,7 @@
 #include <math.h>
 
 extern "C" JNIEXPORT jstring JNICALL
-Java_com_altillimity_satpredict_MainActivity_getCurrentSatPos(
+Java_com_altillimity_satpredict_activities_Satellite_getCurrentSatPos(
     JNIEnv *env,
     jobject /* this */,
     jstring tle1_j,
