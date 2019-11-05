@@ -51,7 +51,7 @@ public class MapActivity extends AppCompatActivity {
         mapView.setHorizontalMapRepetitionEnabled(false);
         mapView.setOverScrollMode(2);
         IMapController mapController = mapView.getController();
-        mapController.setZoom(3);
+        mapController.setZoom(5);
         GeoPoint startPoint = new GeoPoint(latitude, longitude);
         mapController.setCenter(startPoint);
 

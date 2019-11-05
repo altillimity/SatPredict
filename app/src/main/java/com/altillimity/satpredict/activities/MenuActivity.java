@@ -16,7 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.altillimity.satpredict.MainActivity;
+import com.altillimity.satpredict.DataStore;
 import com.altillimity.satpredict.R;
 
 import org.osmdroid.config.Configuration;
@@ -26,6 +26,12 @@ import java.util.List;
 
 public class MenuActivity extends AppCompatActivity {
 
+    static {
+        System.loadLibrary("native-lib");
+    }
+
+    public static DataStore DATA;
+
     Activity thisAct = this;
 
     ArrayList<Satellite> satellites;
@@ -33,6 +39,10 @@ public class MenuActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        DATA = new DataStore(getFilesDir());
+        DATA.loadConfig();
+
         setContentView(R.layout.menu_view);
 
         Context ctx = getApplicationContext();
@@ -42,8 +52,8 @@ public class MenuActivity extends AppCompatActivity {
 
         satellites = new ArrayList<Satellite>();
 
-        for (String sat : MainActivity.DATA.satellites.keySet()) {
-            String[] tle = MainActivity.DATA.satellites.get(sat).split(":");
+        for (String sat : DATA.satellites.keySet()) {
+            String[] tle = DATA.satellites.get(sat).split(":");
             satellites.add(new Satellite(sat, tle[0], tle[1]));
         }
 
