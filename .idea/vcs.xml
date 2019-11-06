@@ -3,5 +3,7 @@
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/app/src/main/cpp/libpredict" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/build/app.id" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/build/com.altillimity.satpredict" vcs="Git" />
   </component>
 </project>
