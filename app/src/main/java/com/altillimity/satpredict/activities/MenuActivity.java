@@ -123,15 +123,14 @@ public class MenuActivity extends AppCompatActivity {
 
             textView.setText(satellite.getName());
             satellite.updateData();
-            info.setText("Latitude : "+satellite.getLatitude().toString()+"°\nLongitude : "+satellite.getLontitude().toString()+"°\nElevation : "+satellite.getElevation().toString()+"°");
+            info.setText("Latitude : "+satellite.getLatitude().toString()+"°\nLongitude : "+satellite.getLongitude().toString()+"°\nElevation : "+satellite.getElevation().toString()+"°");
 
             Button btn = viewHolder.buttonMap;
             btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(thisAct, MapActivity.class);
-                    intent.putExtra("latitude", satellite.getLatitude());
-                    intent.putExtra("longitude", satellite.getLontitude());
+                    intent.putExtra("sat", satellite.toString());
                     startActivity(intent);
                 }
             });
@@ -140,7 +139,7 @@ public class MenuActivity extends AppCompatActivity {
                 @Override
                 public void run() {
                     satellite.updateData();
-                    info.setText("Latitude : "+satellite.getLatitude().toString()+"°\nLongitude : "+satellite.getLontitude().toString()+"°\nElevation : "+satellite.getElevation().toString()+"°");
+                    info.setText("Latitude : "+satellite.getLatitude().toString()+"°\nLongitude : "+satellite.getLongitude().toString()+"°\nElevation : "+satellite.getElevation().toString()+"°");
                 }
             }, 0, 1000);
 

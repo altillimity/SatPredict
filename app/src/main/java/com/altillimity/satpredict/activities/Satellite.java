@@ -1,5 +1,17 @@
 package com.altillimity.satpredict.activities;
 
+import android.util.Pair;
+
+import androidx.annotation.NonNull;
+
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
+import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.List;
+
 public class Satellite {
     private String satName;
     private String satTle1;
@@ -13,6 +25,8 @@ public class Satellite {
 
     public native String getCurrentSatPos(String tle1, String tle2);
 
+    public native String getSatPosAtTime(String tle1, String tle2, long time);
+
     public String getName() {
         return satName;
     }
@@ -25,12 +39,12 @@ public class Satellite {
         return satTle2;
     }
 
-    Double latitude = 0D, lontitude = 0D, elevation = 0D;
+    Double latitude = 0D, longitude = 0D, elevation = 0D;
 
     public void updateData() {
         String[] infos = getCurrentSatPos(satTle1, satTle2).split(":");
         latitude = Double.parseDouble(infos[0]);
-        lontitude = Double.parseDouble(infos[1]);
+        longitude = Double.parseDouble(infos[1]);
         elevation = Double.parseDouble(infos[2]);
     }
 
@@ -38,11 +52,48 @@ public class Satellite {
         return latitude;
     }
 
-    public Double getLontitude() {
-        return lontitude;
+    public Double getLongitude() {
+        return longitude;
     }
 
     public Double getElevation() {
         return elevation;
+    }
+
+    public List<Pair<Long, Pair<Double, Double>>> predictOrbit(long startingTime, long endTime) {
+        List<Pair<Long, Pair<Double, Double>>> result = new ArrayList<Pair<Long, Pair<Double, Double>>>();
+
+        for (long i = startingTime; i <= endTime; i += 100) {
+            String[] infos = getSatPosAtTime(satTle1, satTle2, i).split(":");
+            Double plannedLatitude = Double.parseDouble(infos[0]);
+            Double plannedLongitude = Double.parseDouble(infos[1]);
+            result.add(Pair.create(i, Pair.create(plannedLatitude, plannedLongitude)));
+        }
+
+        return result;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        JSONObject json = new JSONObject();
+
+        json.put("name", satName);
+        json.put("tle1", satTle1);
+        json.put("tle2", satTle2);
+
+        return json.toJSONString();
+    }
+
+    public static Satellite fromString(String input) {
+        JSONObject json = null;
+        try {
+            json = (JSONObject) new JSONParser().parse(input);
+        } catch (ParseException e) {
+        }
+        String name = (String) json.get("name");
+        String tle1 = (String) json.get("tle1");
+        String tle2 = (String) json.get("tle2");
+        return new Satellite(name, tle1, tle2);
     }
 }
