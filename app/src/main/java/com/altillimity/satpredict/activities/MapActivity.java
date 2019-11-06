@@ -64,7 +64,9 @@ public class MapActivity extends AppCompatActivity {
 
         ArrayList<OverlayItem> items = new ArrayList<OverlayItem>();
 
-        for (Pair<Long,Pair<Double,Double>> current : sat.predictOrbit(TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis()), TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis()) + 3600*2)) {
+        items.add(new OverlayItem("Current Position", "Latitude : " + sat.getLatitude() + "\nLongitude : " + sat.getLongitude(), new GeoPoint(sat.getLatitude(), sat.getLongitude()))); // Lat/Lon decimal degrees
+
+        for (Pair<Long,Pair<Double,Double>> current : sat.predictOrbit(TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() + 100), TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis()) + 3600*2)) {
             ReadableInstant instant = new DateTime(current.first * 1000, DateTimeZone.UTC);
             items.add(new OverlayItem("Position at UTC " + instant.get(DateTimeFieldType.dayOfMonth()) + "/" + instant.get(DateTimeFieldType.monthOfYear()) + "/"  + instant.get(DateTimeFieldType.year()) + " " + instant.get(DateTimeFieldType.clockhourOfDay()) + ":" + instant.get(DateTimeFieldType.minuteOfHour()), "Latitude : " + current.second.first.toString() + "\nLongitude : " + current.second.second.toString(), new GeoPoint(current.second.first, current.second.second))); // Lat/Lon decimal degrees
         }
@@ -84,6 +86,8 @@ public class MapActivity extends AppCompatActivity {
         mOverlay.setFocusItemsOnTap(true);
 
         mapView.getOverlays().add(mOverlay);
+
+        this.setTitle(sat.getName());
     }
 
     public void onResume() {
