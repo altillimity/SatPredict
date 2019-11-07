@@ -104,12 +104,11 @@ public class MenuActivity extends AppCompatActivity {
                 itemView.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View v) {
-                        new AlertDialog.Builder(thisAct).setTitle("Delete satellite")
+                        final int index = getAdapterPosition();
+                        new AlertDialog.Builder(thisAct).setTitle(satellites.get(index).getName())
                                 .setMessage("Are you sure you want to delete this entry?")
                                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
-                                        int index = getAdapterPosition();
-
                                         DATA.satellites.remove(satellites.get(index).getName());
                                         satellites.remove(index);
                                         DATA.saveConfig();
