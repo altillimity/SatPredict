@@ -12,3 +12,4 @@
 /captures
 .externalNativeBuild
 .cxx
+$XDG_CACHE_HOME
