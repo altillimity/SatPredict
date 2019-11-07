@@ -1,7 +1,9 @@
 package com.altillimity.satpredict.activities;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -13,6 +15,7 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -38,6 +41,9 @@ public class MenuActivity extends AppCompatActivity {
 
     ArrayList<Satellite> satellites;
 
+    RecyclerView recyclerView;
+    SatAdapter adapter;
+
     Timer timer = new Timer();
 
     @Override
@@ -52,7 +58,7 @@ public class MenuActivity extends AppCompatActivity {
         Context ctx = getApplicationContext();
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
 
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.menuRecycler);
+        recyclerView = (RecyclerView) findViewById(R.id.menuRecycler);
 
         satellites = new ArrayList<Satellite>();
 
@@ -61,14 +67,16 @@ public class MenuActivity extends AppCompatActivity {
             satellites.add(new Satellite(sat, tle[0], tle[1]));
         }
 
-
-        SatAdapter adapter = new SatAdapter(satellites);
+        adapter = new SatAdapter(satellites);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
+        recyclerView.addItemDecoration(itemDecoration);
+        recyclerView.setHasFixedSize(true);
 
         this.setTitle("Satellites");
 
-        Button btn =  (Button) findViewById(R.id.buttonAddSat);
+        Button btn = (Button) findViewById(R.id.buttonAddSat);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -78,8 +86,7 @@ public class MenuActivity extends AppCompatActivity {
         });
     }
 
-    public class SatAdapter extends
-            RecyclerView.Adapter<SatAdapter.ViewHolder> {
+    public class SatAdapter extends RecyclerView.Adapter<SatAdapter.ViewHolder> {
 
         public class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -93,6 +100,28 @@ public class MenuActivity extends AppCompatActivity {
                 nameTextView = (TextView) itemView.findViewById(R.id.menu_text);
                 infoTextView = (TextView) itemView.findViewById(R.id.textViewInfo);
                 buttonMap = (Button) itemView.findViewById(R.id.buttonMap);
+
+                itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        new AlertDialog.Builder(thisAct).setTitle("Delete satellite")
+                                .setMessage("Are you sure you want to delete this entry?")
+                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        int index = getAdapterPosition();
+
+                                        DATA.satellites.remove(satellites.get(index).getName());
+                                        satellites.remove(index);
+                                        DATA.saveConfig();
+
+                                        // Used to recompute the layout as well
+                                        adapter.notifyDataSetChanged();
+                                    }
+                                }).setNegativeButton(android.R.string.no, null)
+                                .setIcon(android.R.drawable.ic_dialog_alert).show();
+                        return false;
+                    }
+                });
             }
         }
 
@@ -123,7 +152,9 @@ public class MenuActivity extends AppCompatActivity {
 
             textView.setText(satellite.getName());
             satellite.updateData();
-            info.setText("Latitude : "+satellite.getLatitude().toString()+"°\nLongitude : "+satellite.getLongitude().toString()+"°\nElevation : "+satellite.getElevation().toString()+"°");
+            info.setText("Latitude : " + satellite.getLatitude().toString() + "°\nLongitude : "
+                    + satellite.getLongitude().toString() + "°\nElevation : " + satellite.getElevation().toString()
+                    + "°");
 
             Button btn = viewHolder.buttonMap;
             btn.setOnClickListener(new View.OnClickListener() {
@@ -139,7 +170,9 @@ public class MenuActivity extends AppCompatActivity {
                 @Override
                 public void run() {
                     satellite.updateData();
-                    info.setText("Latitude : "+satellite.getLatitude().toString()+"°\nLongitude : "+satellite.getLongitude().toString()+"°\nElevation : "+satellite.getElevation().toString()+"°");
+                    info.setText("Latitude : " + satellite.getLatitude().toString() + "°\nLongitude : "
+                            + satellite.getLongitude().toString() + "°\nElevation : "
+                            + satellite.getElevation().toString() + "°");
                 }
             }, 0, 1000);
 
