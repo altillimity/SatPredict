@@ -44,4 +44,10 @@
         android:layout_height="wrap_content"
         android:text="CURRENT LOCATION" />
 
+    <Button
+        android:id="@+id/buttonSave"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="SAVE" />
+
 </LinearLayout>

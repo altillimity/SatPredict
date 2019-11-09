@@ -29,7 +29,7 @@ public class ConfigActivity extends AppCompatActivity implements LocationListene
     EditText latField;
     EditText lonField;
 
-    Button locateButton;
+    Button locateButton, saveButton;
 
     Switch dynamicLocationSwitch;
 
@@ -54,23 +54,44 @@ public class ConfigActivity extends AppCompatActivity implements LocationListene
 
         locateButton = findViewById(R.id.buttonAutoLocate);
         locateButton.setOnClickListener(new LocateButtonListener());
+
+        saveButton = findViewById(R.id.buttonSave);
+        saveButton.setOnClickListener(new SaveButtonListener());
     }
 
     public class LocateButtonListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            if (ContextCompat.checkSelfPermission(thisAct,
-                    Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
-                ActivityCompat.requestPermissions(thisAct, new String[] { Manifest.permission.ACCESS_FINE_LOCATION },
-                        99);
+            if (ContextCompat.checkSelfPermission(thisAct, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+            ActivityCompat.requestPermissions(thisAct, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},99);
             try {
                 Toast.makeText(thisAct, "Getting your current location...", Toast.LENGTH_SHORT).show();
                 locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5, ConfigActivity.this);
-            } catch (SecurityException e) {
+            }
+            catch(SecurityException e) {
                 e.printStackTrace();
                 Toast.makeText(thisAct, "Error while getting your location!", Toast.LENGTH_SHORT).show();
             }
+        }
+    }
+
+    public class SaveButtonListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            try {
+                Double.parseDouble(latField.getText().toString());
+                Double.parseDouble(lonField.getText().toString());
+            } catch (NumberFormatException e) {
+                Toast.makeText(thisAct, "Error while saving!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            MenuActivity.DATA.setLatitude(latField.getText().toString());
+            MenuActivity.DATA.setLongitude(lonField.getText().toString());
+            MenuActivity.DATA.saveConfig();
+
+            Toast.makeText(thisAct, "Saved", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -80,15 +101,11 @@ public class ConfigActivity extends AppCompatActivity implements LocationListene
         latField.setText(String.valueOf(location.getLatitude()));
         locationManager.removeUpdates(ConfigActivity.this);
         Toast.makeText(thisAct, "Done!", Toast.LENGTH_SHORT).show();
-        MenuActivity.DATA.setLatitude(latField.getText().toString());
-        MenuActivity.DATA.setLongitude(lonField.getText().toString());
-        MenuActivity.DATA.saveConfig();
     }
 
     @Override
     public void onProviderDisabled(String provider) {
-        Toast.makeText(this, "Please enable location to enable auto filling your longitude and latitude!",
-                Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Please enable location to enable auto filling your longitude and latitude!", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -99,13 +116,5 @@ public class ConfigActivity extends AppCompatActivity implements LocationListene
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
 
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        MenuActivity.DATA.setLatitude(latField.getText().toString());
-        MenuActivity.DATA.setLongitude(lonField.getText().toString());
-        MenuActivity.DATA.saveConfig();
     }
 }
