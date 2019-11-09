@@ -17,7 +17,7 @@ public class DataStore {
     private File dataPath;
 
     public JSONObject data;
-    public Map<String, String> satellites = new HashMap<String,String>();
+    public Map<String, String> satellites = new HashMap<String, String>();
 
     public DataStore(File folder) {
         data = new JSONObject();
@@ -37,6 +37,8 @@ public class DataStore {
             }
             satellites = (Map<String, String>) data.get("satellites");
         } else {
+            data.put("obsLon", "0.0000");
+            data.put("obsLat", "0.0000");
             data.put("initialDone", false);
             data.put("satellites", satellites);
 
@@ -76,5 +78,21 @@ public class DataStore {
 
     public void setInitialSetupDone(boolean value) {
         data.replace("initialDone", value);
+    }
+
+    public String getLongitude() {
+        return (String) data.get("obsLon");
+    }
+
+    public void setLongitude(String value) {
+        data.replace("obsLon", value);
+    }
+
+    public String getLatitude() {
+        return (String) data.get("obsLat");
+    }
+
+    public void setLatitude(String value) {
+        data.replace("obsLat", value);
     }
 }

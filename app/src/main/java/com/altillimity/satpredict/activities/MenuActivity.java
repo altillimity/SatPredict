@@ -64,7 +64,8 @@ public class MenuActivity extends AppCompatActivity {
 
         for (String sat : DATA.satellites.keySet()) {
             String[] tle = DATA.satellites.get(sat).split(":");
-            satellites.add(new Satellite(sat, tle[0], tle[1]));
+            satellites.add(new Satellite(sat, tle[0], tle[1], Double.valueOf(DATA.getLongitude()),
+                    Double.valueOf(DATA.getLatitude())));
         }
 
         adapter = new SatAdapter(satellites);
@@ -81,6 +82,15 @@ public class MenuActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(thisAct, AddSatActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        Button btn2 = (Button) findViewById(R.id.buttonConfig);
+        btn2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(thisAct, ConfigActivity.class);
                 startActivity(intent);
             }
         });

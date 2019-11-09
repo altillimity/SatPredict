@@ -42,16 +42,18 @@ public class AddSatActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
 
-            if(MenuActivity.DATA.satellites.containsKey(satNameField.getText().toString())) {
+            if (MenuActivity.DATA.satellites.containsKey(satNameField.getText().toString())) {
                 new AlertDialog.Builder(thisAct).setTitle("Duplicate")
-                        .setMessage("Another satellite with this name already exists!").setNegativeButton(android.R.string.no, null)
-                        .setIcon(android.R.drawable.ic_dialog_alert).show();
+                        .setMessage("Another satellite with this name already exists!")
+                        .setNegativeButton(android.R.string.no, null).setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
                 return;
             }
 
             try {
                 new Satellite(satNameField.getText().toString(), tle1Field.getText().toString(),
-                        tle2Field.getText().toString()).updateData();
+                        tle2Field.getText().toString(), Double.valueOf(MenuActivity.DATA.getLongitude()),
+                        Double.valueOf(MenuActivity.DATA.getLatitude())).updateData();
             } catch (NumberFormatException e) {
                 new AlertDialog.Builder(thisAct).setTitle("TLE parsing error")
                         .setMessage("Make sure you entered it right!").setNegativeButton(android.R.string.no, null)

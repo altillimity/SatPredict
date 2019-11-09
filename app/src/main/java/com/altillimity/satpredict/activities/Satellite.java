@@ -15,14 +15,17 @@ public class Satellite {
     private String satName;
     private String satTle1;
     private String satTle2;
+    private double obsLon, obsLat;
 
-    public Satellite(String name, String tle1, String tle2) {
+    public Satellite(String name, String tle1, String tle2, double obsLongitude, double obsLatitude) {
         satName = name;
         satTle1 = tle1;
         satTle2 = tle2;
+        obsLon = obsLongitude;
+        obsLat = obsLatitude;
     }
 
-    public native String getCurrentSatPos(String tle1, String tle2);
+    public native String getCurrentSatPos(String tle1, String tle2, double obsLong, double obsLat);
 
     public native String getSatPosAtTime(String tle1, String tle2, long time);
 
@@ -38,10 +41,15 @@ public class Satellite {
         return satTle2;
     }
 
+    public void setObserverLocation(Double lon, Double lat) {
+        obsLon = lon;
+        obsLat = lat;
+    }
+
     Double latitude = 0D, longitude = 0D, elevation = 0D;
 
     public void updateData() {
-        String[] infos = getCurrentSatPos(satTle1, satTle2).split(":");
+        String[] infos = getCurrentSatPos(satTle1, satTle2, obsLon, obsLat).split(":");
         latitude = Double.parseDouble(infos[0]);
         longitude = Double.parseDouble(infos[1]);
         elevation = Double.parseDouble(infos[2]);
@@ -80,6 +88,8 @@ public class Satellite {
         json.put("name", satName);
         json.put("tle1", satTle1);
         json.put("tle2", satTle2);
+        json.put("obsLon", obsLon);
+        json.put("obsLat", obsLat);
 
         return json.toJSONString();
     }
@@ -93,6 +103,8 @@ public class Satellite {
         String name = (String) json.get("name");
         String tle1 = (String) json.get("tle1");
         String tle2 = (String) json.get("tle2");
-        return new Satellite(name, tle1, tle2);
+        Double lon = (Double) json.get("obsLon");
+        Double lat = (Double) json.get("obsLat");
+        return new Satellite(name, tle1, tle2, lon, lat);
     }
 }

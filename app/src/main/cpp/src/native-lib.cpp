@@ -9,7 +9,9 @@ Java_com_altillimity_satpredict_activities_Satellite_getCurrentSatPos(
     JNIEnv *env,
     jobject /* this */,
     jstring tle1_j,
-    jstring tle2_j)
+    jstring tle2_j, 
+    jdouble lon, 
+    jdouble lat)
 {
     std::string result;
 
@@ -26,7 +28,7 @@ Java_com_altillimity_satpredict_activities_Satellite_getCurrentSatPos(
         exit(1);
     }
 
-    predict_observer_t *obs = predict_create_observer("Me", 48.7778 * M_PI / 180.0, 1.81 * M_PI / 180.0, 0);
+    predict_observer_t *obs = predict_create_observer("Me", (48.7778 * M_PI) / 180.0, (1.81 * M_PI) / 180.0, 0);
     if (!obs)
     {
         exit(1);
@@ -43,7 +45,7 @@ Java_com_altillimity_satpredict_activities_Satellite_getCurrentSatPos(
     result = std::to_string((sat_orbit.latitude * 180.0 / M_PI) >= 180 ? (sat_orbit.latitude * 180.0 / M_PI) - 360 : (sat_orbit.latitude * 180.0 / M_PI)) + ":" + std::to_string((sat_orbit.longitude * 180.0 / M_PI) >= 180 ? (sat_orbit.longitude * 180.0 / M_PI) - 360 : (sat_orbit.longitude * 180.0 / M_PI)) + ":" + std::to_string(observer.elevation * 180.0 / M_PI);
 
     predict_destroy_orbital_elements(sat);
-    //predict_destroy_observer(obs);
+    predict_destroy_observer(obs);
 
     return env->NewStringUTF(result.c_str());
 }
@@ -71,24 +73,14 @@ Java_com_altillimity_satpredict_activities_Satellite_getSatPosAtTime(
         exit(1);
     }
 
-    predict_observer_t *obs = predict_create_observer("Me", 48.7778 * M_PI / 180.0, 1.81 * M_PI / 180.0, 0);
-    if (!obs)
-    {
-        exit(1);
-    }
-
     predict_julian_date_t curr_time = predict_to_julian(time_j);
 
     struct predict_position sat_orbit;
     predict_orbit(sat, &sat_orbit, curr_time);
 
-    struct predict_observation observer;
-    predict_observe_orbit(obs, &sat_orbit, &observer);
-
     result = std::to_string((sat_orbit.latitude * 180.0 / M_PI) >= 180 ? (sat_orbit.latitude * 180.0 / M_PI) - 360 : (sat_orbit.latitude * 180.0 / M_PI)) + ":" + std::to_string((sat_orbit.longitude * 180.0 / M_PI) >= 180 ? (sat_orbit.longitude * 180.0 / M_PI) - 360 : (sat_orbit.longitude * 180.0 / M_PI));
 
     predict_destroy_orbital_elements(sat);
-    //predict_destroy_observer(obs);
 
     return env->NewStringUTF(result.c_str());
 }

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/lblLong"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Observer longitude (°) :" />
+
+    <EditText
+        android:id="@+id/editTextLongitude"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="0.00000" />
+
+    <TextView
+        android:id="@+id/lblLat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Observer latitude (°) :" />
+
+    <EditText
+        android:id="@+id/editTextLatitude"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="0.00000" />
+
+    <Switch
+        android:id="@+id/switchDynamicLocation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:checked="false"
+        android:text="Use dynamic location" />
+
+    <Button
+        android:id="@+id/buttonAutoLocate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="CURRENT LOCATION" />
+
+</LinearLayout>
