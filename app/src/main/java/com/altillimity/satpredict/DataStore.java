@@ -1,5 +1,8 @@
 package com.altillimity.satpredict;
 
+import android.content.res.Resources;
+import android.os.FileUtils;
+
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -8,7 +11,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,10 +23,12 @@ public class DataStore {
 
     public JSONObject data;
     public Map<String, String> satellites = new HashMap<String, String>();
+    private Resources res;
 
-    public DataStore(File folder) {
+    public DataStore(File folder, Resources res) {
         data = new JSONObject();
         dataPath = new File(folder, "data.json");
+        this.res = res;
     }
 
     public void loadConfig() {
@@ -37,21 +44,21 @@ public class DataStore {
             }
             satellites = (Map<String, String>) data.get("satellites");
         } else {
-            data.put("obsLon", "0.0000");
-            data.put("obsLat", "0.0000");
-            data.put("initialDone", false);
-            data.put("satellites", satellites);
+            InputStream is = res.openRawResource(R.raw.data);
 
-            PrintWriter pw = null;
             try {
+                InputStream ins = res.openRawResource(R.raw.data);
+                byte[] b = new byte[ins.available()];
+                ins.read(b);
+                PrintWriter pw = null;
                 pw = new PrintWriter(dataPath);
-            } catch (FileNotFoundException e) {
+                pw.write(new String(b));
+                pw.flush();
+                pw.close();
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-            pw.write(data.toJSONString());
-
-            pw.flush();
-            pw.close();
+            loadConfig();
         }
     }
 

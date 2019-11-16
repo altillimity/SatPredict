@@ -50,7 +50,7 @@ public class MenuActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        DATA = new DataStore(getFilesDir());
+        DATA = new DataStore(getFilesDir(), getResources());
         DATA.loadConfig();
 
         setContentView(R.layout.menu_view);
