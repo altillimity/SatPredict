@@ -2,8 +2,8 @@ build:
   image: debian:sid
   stage: build
   before_script:
-    - apt-get update
-    - apt-get install -y cmake ninja-build openjdk-8-jdk wget unzip
+    - apt-get --quiet update
+    - apt-get install --quiet -y cmake ninja-build openjdk-8-jdk wget unzip
     - wget --quiet --output-document=android-sdk.zip https://dl.google.com/android/repository/sdk-tools-linux-3859397.zip
     - mkdir $PWD/android-sdk-linux
     - unzip -qq android-sdk.zip -d $PWD/android-sdk-linux
