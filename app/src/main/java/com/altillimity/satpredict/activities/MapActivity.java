@@ -61,7 +61,11 @@ public class MapActivity extends AppCompatActivity {
         updateTimer.schedule(new TimerTask() {
             @Override
             public void run() {
-                mapView.invalidate();
+                runOnUiThread(new Runnable() {
+                    @Override public void run() {
+                        mapView.invalidate();
+                    }
+                });
             }
         }, 0, 1000);
     }

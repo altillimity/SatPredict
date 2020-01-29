@@ -178,10 +178,14 @@ public class MenuActivity extends AppCompatActivity {
             timer.schedule(new TimerTask() {
                 @Override
                 public void run() {
-                    satellite.updateData();
-                    info.setText("Latitude : " + satellite.getLatitude().toString() + "°\nLongitude : "
-                            + satellite.getLongitude().toString() + "°\nElevation : "
-                            + satellite.getElevation().toString() + "°");
+                    runOnUiThread(new Runnable() {
+                        @Override public void run() {
+                            satellite.updateData();
+                            info.setText("Latitude : " + satellite.getLatitude().toString() + "°\nLongitude : "
+                                    + satellite.getLongitude().toString() + "°\nElevation : "
+                                    + satellite.getElevation().toString() + "°");
+                        }
+                    });
                 }
             }, 0, 1000);
 
