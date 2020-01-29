@@ -6,3 +6,4 @@ Planned additions :
  - Widget
  - Multiple satellites tracking at once
  - Passes prediction and reminders
+ - Automated TLE updates like GPredict
